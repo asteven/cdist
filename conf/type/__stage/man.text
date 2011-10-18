@@ -1,0 +1,45 @@
+cdist-type__stage(7)
+====================
+Steven Armstrong <steven-cdist--@--armstrong.cc>
+
+
+NAME
+----
+cdist-type__stage - download and unpack a stage file
+
+
+DESCRIPTION
+-----------
+Downloads and unpacks a operating system stage to /target.
+
+
+REQUIRED PARAMETERS
+-------------------
+   TODOC
+
+
+OPTIONAL PARAMETERS
+-------------------
+uri::
+   The uri from which to fetch the tarball.
+   Defaults to object_id
+
+
+EXAMPLES
+--------
+
+--------------------------------------------------------------------------------
+__stage tftp:///path/to/stage.tgz
+__stage http://path/to/stage.tgz
+--------------------------------------------------------------------------------
+
+
+SEE ALSO
+--------
+- cdist-type(7)
+
+
+COPYING
+-------
+Copyright \(C) 2011 Steven Armstrong. Free use of this software is
+granted under the terms of the GNU General Public License version 3 (GPLv3).
