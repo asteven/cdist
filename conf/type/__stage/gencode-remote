@@ -18,3 +18,23 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 
+# TODO: download tarball
+#   - http & co -> wget
+#   - file:// -> local
+#   - rsync
+#  
+# TODO: unpack tarball to $target
+
+# include function library for use on target
+echo "__debug=$__debug"
+cat "$__type/files/lib.sh"
+
+uri="$(cat "$__object/parameter/uri")"
+target="$(cat "$__object/parameter/target")"
+
+file_name="${uri##*/}"
+destination="$target/$file_name"
+
+echo "fetch_tftp '$uri' '$destination'"
+echo "tar -C $target -xvz -f $destination"
+echo "rm $destination"

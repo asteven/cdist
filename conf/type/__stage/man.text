@@ -24,6 +24,10 @@ uri::
    The uri from which to fetch the tarball.
    Defaults to object_id
 
+target::
+   where to unpack the tarball to. 
+   Defaults to /target
+
 
 EXAMPLES
 --------

@@ -19,9 +19,15 @@
 #
 
 if [ -f "$__object/parameter/uri"]; then
-   stage="$(cat "$__object/parameter/uri")"
+   uri="$(cat "$__object/parameter/uri")"
 else
-   stage="$__object_id"
-   echo "$stage" > "$__object/parameter/uri"
+   uri="$__object_id"
+   echo "$uri" > "$__object/parameter/uri"
 fi
 
+if [ -f "$__object/parameter/target"]; then
+   target="$(cat "$__object/parameter/target")"
+else
+   target="/target"
+   echo "$target" > "$__object/parameter/target"
+fi
