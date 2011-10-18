@@ -23,6 +23,14 @@ die() {
    exit 1 
 }
 
+cat << DONE
+output_if_debug() {
+   if [ "$__debug" = "yes" ]; then
+      cat
+   fi
+}
+DONE
+
 get_type_from_mkfs() {
    _device="$1"
    for mkfs_object in $(find "$__global/object/__mkfs" -path "*.cdist"); do
@@ -37,8 +45,20 @@ get_type_from_mkfs() {
    unset mkfs_object
 }
 
-# FIXME: does --version-sort always do the right thing?
-objects=$(find "$__global/object/__install_mount" -path "*.cdist" | sort --version-sort)
+get_objects() {
+   objects_file=$(mktemp)
+   for object in $(find "$__global/object/__install_mount" -path "*.cdist"); do
+      object_dir="$(cat "$object/parameter/dir")"
+      echo "$object_dir $object" >> $objects_file
+   done
+   sort -k 1,1 $objects_file | cut -d' ' -f 2
+   rm $objects_file
+   unset objects_file
+   unset object
+   unset object_dir
+}
+
+objects=$(get_objects)
 for object in $objects; do
    device="$(cat "$object/parameter/device")"
    dir="$(cat "$object/parameter/dir")"
@@ -62,6 +82,6 @@ for object in $objects; do
 
       echo "[ -d \"$mount_point\" ] || mkdir -p \"$mount_point\""
       # let mount figure out the filesystem type
-      echo "mount $options \"$device\" \"$mount_point\""
+      echo "mount $options \"$device\" \"$mount_point\" | output_if_debug"
    fi
 done
