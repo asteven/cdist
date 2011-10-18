@@ -59,7 +59,7 @@ for object in $objects; do
       [ -n "$options" ] && options="-o $options"
       mount_point="${prefix}${dir}"
 
-      echo "[ -d \"$mount_point\" ] mkdir -p \"$mount_point\""
+      echo "[ -d \"$mount_point\" ] || mkdir -p \"$mount_point\""
       # let mount figure out the filesystem type
       echo "mount $options \"$device\" \"$mount_point\""
    fi
