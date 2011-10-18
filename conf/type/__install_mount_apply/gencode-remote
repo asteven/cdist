@@ -37,7 +37,8 @@ get_type_from_mkfs() {
    unset mkfs_object
 }
 
-objects=$(find "$__global/object/__install_mount" -path "*.cdist" | sort)
+# FIXME: does --version-sort always do the right thing?
+objects=$(find "$__global/object/__install_mount" -path "*.cdist" | sort --version-sort)
 for object in $objects; do
    device="$(cat "$object/parameter/device")"
    dir="$(cat "$object/parameter/dir")"
