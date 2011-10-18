@@ -6,13 +6,18 @@ debug() {
    #echo "[__partition_msdos_apply] $@" >&2
    :
 }
+output_if_debug() {
+   if [ "$__debug" = "yes" ]; then
+      cat
+   fi
+}
 
 fdisk_command() {
    local device="$1"
    local cmd="$2"
 
    debug fdisk_command "running fdisk command '${cmd}' on device ${device}"
-   printf "${cmd}\nw\n" | fdisk -c -u "$device"
+   printf "${cmd}\nw\n" | fdisk -c -u "$device" | output_if_debug
    # give disk some time
    sleep 1
    return $?

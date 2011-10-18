@@ -53,6 +53,7 @@ size_to_mb() {
 }
 
 # include function library for use on target
+echo "__debug=$__debug"
 cat "$__type/files/lib.sh"
 
 partitions="$__object/explorer/partitions"

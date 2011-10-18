@@ -21,8 +21,16 @@
 device="$(cat "$__object/parameter/device")"
 type="$(cat "$__object/parameter/type")"
 
+cat << DONE
+output_if_debug() {
+   if [ "$__debug" = "yes" ]; then
+      cat
+   fi
+}
+DONE
+
 if [ "$type" = "swap" ]; then
-   echo "mkswap $device"
+   echo "mkswap $device | output_if_debug"
 else
    command="mkfs -t $type -q"
    if [ -f "$__object/parameter/options" ]; then
@@ -34,5 +42,5 @@ else
       blocks="$(cat "$__object/parameter/blocks")"
       command="$command $blocks"
    fi
-   echo "$command"
+   echo "$command 2>&1 | output_if_debug"
 fi
