@@ -87,7 +87,7 @@ class ConfigInstall(object):
             new_objects_created = False
             for cdist_object in core.Object.list_objects(self.local.object_path,
                                                          self.local.type_path):
-                if cdist_object.prepared:
+                if cdist_object.state == core.Object.STATE_PREPARED:
                     self.log.debug("Skipping re-prepare of object %s", cdist_object)
                     continue
                 else:
@@ -121,26 +121,28 @@ class ConfigInstall(object):
         self.log.info("Running manifest and explorers for " + cdist_object.name)
         self.run_type_explorers(cdist_object)
         self.manifest.run_type_manifest(cdist_object)
-        cdist_object.prepared = True
+        cdist_object.state = core.Object.STATE_PREPARED
 
     def object_run(self, cdist_object):
         """Run gencode and code for an object"""
-        self.log.info("Running gencode and code for " + cdist_object.name)
-
-        # Catch requirements, which re-call us
-        # FIXME: change .ran to running
-        if cdist_object.ran:
+        self.log.info("Starting run of " + cdist_object.name)
+        if cdist_object.state == core.Object.STATE_RUNNING:
+            raise cdist.Error("Detected circular dependency in " + cdist_object.name)
+        elif cdist_object.state == core.Object.STATE_DONE:
+            self.log.debug("Ignoring run of already finished object %s", cdist_object)
             return
         else:
-            cdist_object.ran = True
+            cdist_object.state = core.Object.STATE_RUNNING
 
         cdist_type = cdist_object.type
 
         for requirement in cdist_object.requirements:
             self.log.debug("Object %s requires %s", cdist_object, requirement)
-            # FIXME: requirement is a string, need to create object here
             required_object = cdist_object.object_from_name(requirement)
+            self.log.info("Resolving dependency %s for %s" % (required_object.name, cdist_object.name))
             self.object_run(required_object)
+
+        self.log.info("Running gencode and code for " + cdist_object.name)
 
         # Generate
         cdist_object.code_local = self.code.run_gencode_local(cdist_object)
@@ -154,6 +156,9 @@ class ConfigInstall(object):
         if cdist_object.code_remote:
             self.code.transfer_code_remote(cdist_object)
             self.code.run_code_remote(cdist_object)
+
+        # Mark this object as done
+        cdist_object.state == core.Object.STATE_DONE
 
     def stage_run(self):
         """The final (and real) step of deployment"""
