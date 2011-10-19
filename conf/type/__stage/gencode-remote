@@ -29,4 +29,7 @@ DONE
 uri="$(cat "$__object/parameter/uri")"
 target="$(cat "$__object/parameter/target")"
 
-echo "curl '$uri' | tar -C '$target' -xvzs | output_if_debug"
+[ "$__debug" = "yes" ] && curl="curl" || curl="curl -s"
+[ "$__debug" = "yes" ] && tar="tar -xvzp" || tar="tar -xzp"
+
+echo "$curl '$uri' | $tar -C '$target' | output_if_debug"
