@@ -19,14 +19,14 @@
 #
 
 # set defaults
-if [ -f "$__object/parameter/uri"]; then
+if [ -f "$__object/parameter/uri" ]; then
    uri="$(cat "$__object/parameter/uri")"
 else
    uri="$__object_id"
    echo "$uri" > "$__object/parameter/uri"
 fi
 
-if [ -f "$__object/parameter/target"]; then
+if [ -f "$__object/parameter/target" ]; then
    target="$(cat "$__object/parameter/target")"
 else
    target="/target"
