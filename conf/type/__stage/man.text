@@ -10,23 +10,20 @@ cdist-type__stage - download and unpack a stage file
 
 DESCRIPTION
 -----------
-Downloads and unpacks a operating system stage to /target.
-
-
-REQUIRED PARAMETERS
--------------------
-   TODOC
+Downloads a operating system stage using curl and unpacks it to /target
+using tar.
 
 
 OPTIONAL PARAMETERS
 -------------------
 uri::
-   The uri from which to fetch the tarball.
-   Defaults to object_id
+   The uri from which to fetch the tarball. Defaults to object_id.
+   Can be anything understood by curl, e.g:
+      tftp:///path/to/stage.tgz
+      file:///local/path/stage.tgz
 
 target::
-   where to unpack the tarball to. 
-   Defaults to /target
+   where to unpack the tarball to. Defaults to /target.
 
 
 EXAMPLES
@@ -34,7 +31,8 @@ EXAMPLES
 
 --------------------------------------------------------------------------------
 __stage tftp:///path/to/stage.tgz
-__stage http://path/to/stage.tgz
+__stage http://path/to/stage.tgz --target /mnt/foobar
+__stage some-id --uri file:///path/to/stage.tgz --target /target
 --------------------------------------------------------------------------------
 
 
