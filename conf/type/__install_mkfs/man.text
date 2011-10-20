@@ -1,11 +1,11 @@
-cdist-type__mkfs(7)
-===================
+cdist-type__install_mkfs(7)
+===========================
 Steven Armstrong <steven-cdist--@--armstrong.cc>
 
 
 NAME
 ----
-cdist-type__mkfs - build a linux file system
+cdist-type__install_mkfs - build a linux file system
 
 
 DESCRIPTION
@@ -16,7 +16,7 @@ This cdist type is a wrapper for the mkfs command.
 REQUIRED PARAMETERS
 -------------------
 type::
-   The filesystem type to use. Same as mkfs -t.
+   The filesystem type to use. Same as used with mkfs -t.
 
 
 OPTIONAL PARAMETERS
@@ -36,12 +36,12 @@ EXAMPLES
 
 --------------------------------------------------------------------------------
 # reiserfs /dev/sda5
-__mkfs /dev/sda5 --type reiserfs
+__install_mkfs /dev/sda5 --type reiserfs
 # same thing with explicit device
-__mkfs whatever --device /dev/sda5 --type reiserfs
+__install_mkfs whatever --device /dev/sda5 --type reiserfs
 
 # jfs with journal on /dev/sda2
-__mkfs /dev/sda1 --type jfs --options "-j /dev/sda2"
+__install_mkfs /dev/sda1 --type jfs --options "-j /dev/sda2"
 --------------------------------------------------------------------------------
 
 
