@@ -67,6 +67,8 @@ for object in $objects; do
       type="$(cat "$object/parameter/type")"
    else
       type="$(get_type_from_mkfs "$device")"
+      # store for later use in __install_fstab
+      echo "$type" > "$object/parameter/type"
    fi
    [ -n "$type" ] || die "Can't determine type for $object"
    if [ "$type" = "swap" ]; then
