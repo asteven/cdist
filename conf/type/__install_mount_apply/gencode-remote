@@ -83,7 +83,6 @@ for object in $objects; do
       mount_point="${prefix}${dir}"
 
       echo "[ -d \"$mount_point\" ] || mkdir -p \"$mount_point\""
-      # let mount figure out the filesystem type
-      echo "mount $options \"$device\" \"$mount_point\" | output_if_debug"
+      echo "mount -t \"$type\" $options \"$device\" \"$mount_point\" | output_if_debug"
    fi
 done
