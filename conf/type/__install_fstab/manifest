@@ -18,3 +18,15 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 
+if [ -f "$__object/parameter/prefix" ]; then
+   prefix="$(cat "$object/parameter/prefix")"
+else
+   prefix="/target"
+   echo "$prefix" > "$object/parameter/prefix"
+fi
+
+[ -d "$__object/files" ] || mkdir "$__object/files"
+require="$__self" __install_file "${prefix}/etc/fstab" --source "$__object/files/fstab" \
+   --mode 644 \
+   --owner root \
+   --group root

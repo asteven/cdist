@@ -5,7 +5,7 @@ Steven Armstrong <steven-cdist--@--armstrong.cc>
 
 NAME
 ----
-cdist-type__install_fstab - generate /etc/fstab
+cdist-type__install_fstab - generate /etc/fstab during installation
 
 
 DESCRIPTION
@@ -21,7 +21,9 @@ None.
 
 OPTIONAL PARAMETERS
 -------------------
-None.
+prefix::
+   The prefix under which to generate the /etc/fstab file.
+   Defaults to /target.
 
 
 EXAMPLES
@@ -29,6 +31,7 @@ EXAMPLES
 
 --------------------------------------------------------------------------------
 __install_fstab
+__install_fstab --prefix /mnt/target
 --------------------------------------------------------------------------------
 
 
