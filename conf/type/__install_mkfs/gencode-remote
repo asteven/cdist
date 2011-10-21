@@ -29,18 +29,24 @@ output_if_debug() {
 }
 DONE
 
-if [ "$type" = "swap" ]; then
-   echo "mkswap $device | output_if_debug"
-else
-   command="mkfs -t $type -q"
-   if [ -f "$__object/parameter/options" ]; then
-      options="$(cat "$__object/parameter/options")"
-      command="$command $options"
-   fi
-   command="$command $device"
-   if [ -f "$__object/parameter/blocks" ]; then
-      blocks="$(cat "$__object/parameter/blocks")"
-      command="$command $blocks"
-   fi
-   echo "$command 2>&1 | output_if_debug"
-fi
+case "$type" in
+   swap)
+      echo "mkswap $device | output_if_debug"
+   ;;
+   tmpfs)
+      # do nothing
+      :
+   ;;
+   *)
+      command="mkfs -t $type -q"
+      if [ -f "$__object/parameter/options" ]; then
+         options="$(cat "$__object/parameter/options")"
+         command="$command $options"
+      fi
+      command="$command $device"
+      if [ -f "$__object/parameter/blocks" ]; then
+         blocks="$(cat "$__object/parameter/blocks")"
+         command="$command $blocks"
+      fi
+      echo "$command 2>&1 | output_if_debug"
+esac
