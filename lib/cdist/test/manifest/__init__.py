@@ -19,9 +19,7 @@
 #
 #
 
-import unittest
 import os
-import tempfile
 import getpass
 import shutil
 import string
@@ -31,6 +29,7 @@ import io
 import sys
 
 import cdist
+from cdist import test
 from cdist.exec import local
 from cdist import core
 from cdist.core import manifest
@@ -41,13 +40,7 @@ fixtures = op.join(my_dir, 'fixtures')
 local_base_path = fixtures
 
 
-class ManifestTestCase(unittest.TestCase):
-
-    def mkdtemp(self, **kwargs):
-        return tempfile.mkdtemp(prefix='tmp.cdist.test.', **kwargs)
-
-    def mkstemp(self, **kwargs):
-        return tempfile.mkstemp(prefix='tmp.cdist.test.', **kwargs)
+class ManifestTestCase(test.CdistTestCase):
 
     def setUp(self):
         self.orig_environ = os.environ
@@ -68,6 +61,7 @@ class ManifestTestCase(unittest.TestCase):
     def test_initial_manifest_environment(self):
         initial_manifest = os.path.join(self.local.manifest_path, "dump_environment")
         handle, output_file = self.mkstemp(dir=self.temp_dir)
+        os.close(handle)
         os.environ['__cdist_test_out'] = output_file
         self.manifest.run_initial_manifest(initial_manifest)
 
@@ -88,6 +82,7 @@ class ManifestTestCase(unittest.TestCase):
         cdist_type = core.Type(self.local.type_path, '__dump_environment')
         cdist_object = core.Object(cdist_type, self.local.object_path, 'whatever')
         handle, output_file = self.mkstemp(dir=self.temp_dir)
+        os.close(handle)
         os.environ['__cdist_test_out'] = output_file
         self.manifest.run_type_manifest(cdist_object)
 

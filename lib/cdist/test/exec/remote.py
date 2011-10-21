@@ -19,34 +19,27 @@
 #
 #
 
-import unittest
 import os
-import tempfile
 import getpass
 import shutil
 import string
 import random
 
 import cdist
+from cdist import test
 from cdist.exec import remote
 
 
-class RemoteTestCase(unittest.TestCase):
-
-    def mkdtemp(self, **kwargs):
-        return tempfile.mkdtemp(prefix='tmp.cdist.test.', **kwargs)
-
-    def mkstemp(self, **kwargs):
-        return tempfile.mkstemp(prefix='tmp.cdist.test.', **kwargs)
+class RemoteTestCase(test.CdistTestCase):
 
     def setUp(self):
         self.temp_dir = self.mkdtemp()
-        target_host = 'localhost'
+        self.target_host = 'localhost'
         self.base_path = self.temp_dir
         user = getpass.getuser()
         remote_exec = "ssh -o User=%s -q" % user
         remote_copy = "scp -o User=%s -q" % user
-        self.remote = remote.Remote(target_host, self.base_path, remote_exec, remote_copy)
+        self.remote = remote.Remote(self.target_host, self.base_path, remote_exec, remote_copy)
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
@@ -75,23 +68,20 @@ class RemoteTestCase(unittest.TestCase):
 
     def test_run_script_success(self):
         handle, script = self.mkstemp(dir=self.temp_dir)
-        fd = open(script, "w")
-        fd.writelines(["#!/bin/sh\n", "/bin/true"])
-        fd.close()
+        with os.fdopen(handle, "w") as fd:
+            fd.writelines(["#!/bin/sh\n", "/bin/true"])
         self.remote.run_script(script)
 
     def test_run_script_fail(self):
         handle, script = self.mkstemp(dir=self.temp_dir)
-        fd = open(script, "w")
-        fd.writelines(["#!/bin/sh\n", "/bin/false"])
-        fd.close()
+        with os.fdopen(handle, "w") as fd:
+            fd.writelines(["#!/bin/sh\n", "/bin/false"])
         self.assertRaises(remote.RemoteScriptError, self.remote.run_script, script)
 
     def test_run_script_get_output(self):
         handle, script = self.mkstemp(dir=self.temp_dir)
-        fd = open(script, "w")
-        fd.writelines(["#!/bin/sh\n", "echo foobar"])
-        fd.close()
+        with os.fdopen(handle, "w") as fd:
+            fd.writelines(["#!/bin/sh\n", "echo foobar"])
         self.assertEqual(self.remote.run_script(script, return_output=True), "foobar\n")
 
     def test_mkdir(self):
@@ -107,6 +97,7 @@ class RemoteTestCase(unittest.TestCase):
 
     def test_transfer_file(self):
         handle, source = self.mkstemp(dir=self.temp_dir)
+        os.close(handle)
         target = self.mkdtemp(dir=self.temp_dir)
         self.remote.transfer(source, target)
         self.assertTrue(os.path.isfile(target))
@@ -115,6 +106,7 @@ class RemoteTestCase(unittest.TestCase):
         source = self.mkdtemp(dir=self.temp_dir)
         # put a file in the directory as payload
         handle, source_file = self.mkstemp(dir=source)
+        os.close(handle)
         source_file_name = os.path.split(source_file)[-1]
         target = self.mkdtemp(dir=self.temp_dir)
         self.remote.transfer(source, target)
@@ -125,3 +117,26 @@ class RemoteTestCase(unittest.TestCase):
         self.remote.create_directories()
         self.assertTrue(os.path.isdir(self.remote.base_path))
         self.assertTrue(os.path.isdir(self.remote.conf_path))
+
+    def test_run_target_host_in_env(self):
+        handle, remote_exec_path = self.mkstemp(dir=self.temp_dir)
+        with os.fdopen(handle, 'w') as fd:
+            fd.writelines(["#!/bin/sh\n", "echo $__target_host"])
+        os.chmod(remote_exec_path, 0o755)
+        remote_exec = remote_exec_path
+        remote_copy = "echo"
+        r = remote.Remote(self.target_host, self.base_path, remote_exec, remote_copy)
+        self.assertEqual(r.run('/bin/true', return_output=True), "%s\n" % self.target_host)
+
+    def test_run_script_target_host_in_env(self):
+        handle, remote_exec_path = self.mkstemp(dir=self.temp_dir)
+        with os.fdopen(handle, 'w') as fd:
+            fd.writelines(["#!/bin/sh\n", "echo $__target_host"])
+        os.chmod(remote_exec_path, 0o755)
+        remote_exec = remote_exec_path
+        remote_copy = "echo"
+        r = remote.Remote(self.target_host, self.base_path, remote_exec, remote_copy)
+        handle, script = self.mkstemp(dir=self.temp_dir)
+        with os.fdopen(handle, "w") as fd:
+            fd.writelines(["#!/bin/sh\n", "/bin/true"])
+        self.assertEqual(r.run_script(script, return_output=True), "%s\n" % self.target_host)
