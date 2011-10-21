@@ -24,16 +24,19 @@ for object in $(find "$__global/object/__install_mount" -path "*.cdist"); do
    dir="$(cat "$object/parameter/dir")"
    prefix="$(cat "$object/parameter/prefix")"
    type="$(cat "$object/parameter/type")"
-   if [ -f "$__object/parameter/options" ]; then
+   if [ -f "$object/parameter/options" ]; then
       options="$(cat "$object/parameter/options")"
    else
       options="defaults"
    fi
    dump=0
    case "$type" in
-      swap|tmpfs)
+      swap)
          pass=0
          dir="$type"
+      ;;
+      tmpfs)
+         pass=0
       ;;
       *)
          pass=1
