@@ -19,6 +19,8 @@
 #
 
 fstab="$__object/files/fstab"
+cat "$__type/files/fstab.header" > "$fstab"
+
 for object in $(find "$__global/object/__install_mount" -path "*.cdist"); do
    device="$(cat "$object/parameter/device")"
    dir="$(cat "$object/parameter/dir")"
