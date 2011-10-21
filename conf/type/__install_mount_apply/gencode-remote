@@ -33,7 +33,7 @@ DONE
 
 get_type_from_mkfs() {
    _device="$1"
-   for mkfs_object in $(find "$__global/object/__mkfs" -path "*.cdist"); do
+   for mkfs_object in $(find "$__global/object/__install_mkfs" -path "*.cdist"); do
       mkfs_device="$(cat "$mkfs_object/parameter/device")"
       if [ "$_device" = "$mkfs_device" ]; then
          cat "$mkfs_object/parameter/type"
