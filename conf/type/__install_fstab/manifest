@@ -19,10 +19,10 @@
 #
 
 if [ -f "$__object/parameter/prefix" ]; then
-   prefix="$(cat "$object/parameter/prefix")"
+   prefix="$(cat "$__object/parameter/prefix")"
 else
    prefix="/target"
-   echo "$prefix" > "$object/parameter/prefix"
+   echo "$prefix" > "$__object/parameter/prefix"
 fi
 
 [ -d "$__object/files" ] || mkdir "$__object/files"

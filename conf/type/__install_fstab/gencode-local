@@ -29,10 +29,15 @@ for object in $(find "$__global/object/__install_mount" -path "*.cdist"); do
    else
       options="defaults"
    fi
-   if [ "$type" = "swap" ]; then
-      pass=0
-   else
-      pass=1
-   fi
+   dump=0
+   case "$type" in
+      swap|tmpfs)
+         pass=0
+         dir="$type"
+      ;;
+      *)
+         pass=1
+      ;;
+   esac
    echo "$device $dir $type $options $dump $pass" >> "$fstab"
 done
