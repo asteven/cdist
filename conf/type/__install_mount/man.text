@@ -41,9 +41,10 @@ EXAMPLES
 --------
 
 --------------------------------------------------------------------------------
-__install_mount / --device /dev/sda5 --options noatime
-__install_mount /boot --device /dev/sda1
+__install_mount slash --dir / --device /dev/sda5 --options noatime
+require="__install_mount/slash" __install_mount /boot --device /dev/sda1
 __install_mount swap --device /dev/sda2 --type swap
+require="__install_mount/slash" __install_mount /tmp --device tmpfs --type tmpfs
 --------------------------------------------------------------------------------
 
 

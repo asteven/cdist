@@ -27,5 +27,3 @@ if [ ! -f "$__object/parameter/prefix" ]; then
    prefix="/target"
    echo "$prefix" > "$__object/parameter/prefix"
 fi
-# pull in the type that actually does something with the above parameters
-require="$__self" __install_mount_apply
