@@ -63,7 +63,7 @@ for object in $objects; do
    device="$(cat "$object/parameter/device")"
    dir="$(cat "$object/parameter/dir")"
    prefix="$(cat "$object/parameter/prefix")"
-   if [ -f "$__object/parameter/type" ]; then
+   if [ -f "$object/parameter/type" ]; then
       type="$(cat "$object/parameter/type")"
    else
       type="$(get_type_from_mkfs "$device")"
