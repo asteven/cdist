@@ -30,7 +30,7 @@ options::
 type::
    filesystem type passed to mount(8) and used in /etc/fstab.
    If type is swap, 'dir' is ignored.
-   Defaults to the filesystem used in __mkfs for the same 'device'.
+   Defaults to the filesystem used in __install_mkfs for the same 'device'.
 
 prefix::
    the prefix to prepend to 'dir' when mounting in the installer.
@@ -51,7 +51,7 @@ SEE ALSO
 --------
 - cdist-type(7)
 - cdist-type__install_mount_apply(7)
-- cdist-type__mkfs(7)
+- cdist-type__install_mkfs(7)
 
 
 COPYING
