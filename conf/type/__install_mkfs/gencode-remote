@@ -33,10 +33,6 @@ case "$type" in
    swap)
       echo "mkswap $device | output_if_debug"
    ;;
-   tmpfs)
-      # do nothing
-      :
-   ;;
    *)
       command="mkfs -t $type -q"
       if [ -f "$__object/parameter/options" ]; then
