@@ -52,12 +52,27 @@ size_to_mb() {
    echo "$size"
 }
 
+get_objects() {
+   objects_file=$(mktemp)
+   for object in $(find "$__global/object/__partition_msdos" -path "*.cdist"); do
+      object_device="$(cat "$object/parameter/device")"
+      object_minor="$(cat "$object/parameter/minor")"
+      echo "$object_device $object_minor $object" >> $objects_file
+   done
+   sort -k 1,2 $objects_file | cut -d' ' -f 3
+   rm $objects_file
+   unset objects_file
+   unset object
+   unset object_device
+   unset object_minor
+}
+
 # include function library for use on target
 echo "__debug=$__debug"
 cat "$__type/files/lib.sh"
 
 partitions="$__object/explorer/partitions"
-objects=$(find "$__global/object/__partition_msdos" -path "*.cdist")
+objects=$(get_objects)
 current_device=""
 available_device_size=
 available_extended_size=
