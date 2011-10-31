@@ -22,6 +22,8 @@ cat << DONE
 output_if_debug() {
    if [ "$__debug" = "yes" ]; then
       cat
+   else
+      cat >> /dev/null
    fi
 }
 DONE
