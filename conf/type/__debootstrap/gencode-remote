@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+# 2011 Steven Armstrong (steven-cdist at armstrong.cc)
+#
+# This file is part of cdist.
+#
+# cdist is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# cdist is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with cdist. If not, see <http://www.gnu.org/licenses/>.
+#
+
+target="$(cat "$__object/parameter/target")"
+suite="$(cat "$__object/parameter/suite")"
+if [ -f "$__object/parameter/arch" ]; then
+   arch="$(cat "$__object/parameter/arch")"
+fi
+if [ -f "$__object/parameter/mirror" ]; then
+   mirror="$(cat "$__object/parameter/mirror")"
+fi
+if [ -f "$__object/parameter/script" ]; then
+   script="$(cat "$__object/parameter/script")"
+fi
+
+state="$(cat "$__object/explorer/state")"
+if [ "$state" = "present" ]; then
+   printf "debootstrap"
+   [ -n "$arch" ] && printf " --arch $arch"
+   printf "$suite $target"
+   [ -n "$mirror" ] && printf " $mirror"
+   [ -n "$script" ] && printf " $script"
+   printf "\n"
+fi

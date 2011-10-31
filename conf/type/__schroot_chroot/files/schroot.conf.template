@@ -1,0 +1,6 @@
+echo "[$name]"
+[ -n "$description" ] && echo "description=$description"
+[ -n "$type" ] && echo "type=$type"
+[ -n "$directory" ] && echo "directory=$directory"
+[ -n "$script_config" ] && echo "script-config=$script_config"
+[ "$arch" = "i386" ] && echo "personality=linux32"
