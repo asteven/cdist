@@ -36,6 +36,6 @@ if [ "$state" = "present" ]; then
    [ -n "$arch" ] && printf " --arch $arch"
    printf "$suite $target"
    [ -n "$mirror" ] && printf " $mirror"
-   [ -n "$script" ] && printf " $mirror"
+   [ -n "$script" ] && printf " $script"
    printf "\n"
 fi
