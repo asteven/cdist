@@ -31,7 +31,7 @@ if [ -f "$__object/parameter/script" ]; then
 fi
 
 state="$(cat "$__object/explorer/state")"
-if [ "$state" = "present" ]; then
+if [ "$state" = "absent" ]; then
    printf "debootstrap"
    [ -n "$arch" ] && printf " --arch $arch"
    printf "$suite $target"
