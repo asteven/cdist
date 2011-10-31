@@ -18,3 +18,24 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 
+target="$(cat "$__object/parameter/target")"
+suite="$(cat "$__object/parameter/suite")"
+if [ -f "$__object/parameter/arch" ]; then
+   arch="$(cat "$__object/parameter/arch")"
+fi
+if [ -f "$__object/parameter/mirror" ]; then
+   mirror="$(cat "$__object/parameter/mirror")"
+fi
+if [ -f "$__object/parameter/script" ]; then
+   script="$(cat "$__object/parameter/script")"
+fi
+
+state="$(cat "$__object/explorer/state")"
+if [ "$state" = "present" ]; then
+   printf "debootstrap"
+   [ -n "$arch" ] && printf " --arch $arch"
+   printf "$suite $target"
+   [ -n "$mirror" ] && printf " $mirror"
+   [ -n "$script" ] && printf " $mirror"
+   printf "\n"
+fi

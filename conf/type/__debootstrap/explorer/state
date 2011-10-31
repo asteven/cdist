@@ -18,14 +18,12 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 
-# set defaults
-if [ ! -f "$__object/parameter/target" ]; then
+if [ -f "$__object/parameter/target" ]; then
+   target="$(cat "$__object/parameter/target")"
+else
    target="/$__object_id"
-   echo "$target" > "$__object/parameter/target"
 fi
-if [ ! -f "$__object/parameter/suite" ]; then
-   cat "$__global/explorer/lsb_codename" > "$__object/parameter/suite"
-fi
-if [ ! -f "$__object/parameter/state" ]; then
-   echo "present" > "$__object/parameter/state"
-fi
+
+[ -e "$target/etc/debian_version" ] \
+   && echo present \
+   || echo absent
