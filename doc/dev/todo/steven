@@ -1,3 +1,19 @@
+chroot:
+   - do i really need/want schroot? or is it to complicated?
+   - types:
+      __schroot: install schroot, create directories, global config files
+      __schroot_chroot: configure chroot
+
+   - where can schroot related config files be defined?
+      read schroot-script-config(5)
+      - preferably store them in /etc/schroot/chroot.d/$name
+
+
+debootstrap:
+   - types:
+      __debootstrap
+
+
 metaparameters:
    - steal the metaparameters from puppet:
 
