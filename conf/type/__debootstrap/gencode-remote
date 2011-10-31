@@ -18,6 +18,14 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 
+cat << DONE
+output_if_debug() {
+   if [ "$__debug" = "yes" ]; then
+      cat
+   fi
+}
+DONE
+
 target="$(cat "$__object/parameter/target")"
 suite="$(cat "$__object/parameter/suite")"
 if [ -f "$__object/parameter/arch" ]; then
@@ -37,5 +45,5 @@ if [ "$state" = "absent" ]; then
    printf " $suite $target"
    [ -n "$mirror" ] && printf " $mirror"
    [ -n "$script" ] && printf " $script"
-   printf "\n"
+   printf " | output_if_debug\n"
 fi
