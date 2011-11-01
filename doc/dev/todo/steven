@@ -9,11 +9,6 @@ chroot:
       - preferably store them in /etc/schroot/chroot.d/$name
 
 
-debootstrap:
-   - types:
-      __debootstrap
-
-
 metaparameters:
    - steal the metaparameters from puppet:
 
