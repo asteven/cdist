@@ -5,18 +5,17 @@ Steven Armstrong <steven-cdist--@--armstrong.cc>
 
 NAME
 ----
-cdist-type__schroot - TODOC
+cdist-type__schroot - install schroot
 
 
 DESCRIPTION
 -----------
-This cdist type allows you to TODOC
+This cdist type allows you to, well, install schroot.
 
 
 REQUIRED PARAMETERS
 -------------------
-foobar::
-   TODOC
+None.
 
 
 OPTIONAL PARAMETERS
