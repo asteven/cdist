@@ -7,6 +7,7 @@ chroot:
    - where can schroot related config files be defined?
       read schroot-script-config(5)
       - preferably store them in /etc/schroot/chroot.d/$name
+   - use one set of customized schroot-script-config files for all nfsroots
 
 
 metaparameters:
