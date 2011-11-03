@@ -18,11 +18,28 @@
 # along with cdist. If not, see <http://www.gnu.org/licenses/>.
 #
 #
-# same as cdist default
+# __remote_exec script to run cdist against a chroot on the target host over ssh.
 #
 # Usage:
-#  __remote_copy="/path/to/this/script" cdist config target_host
+#  __remote_exec="/path/to/this/script schroot-chroot-name" cdist config target_host
 #
 
-#echo "$@" | logger -t "cdist-ssh-copy"
-scp -o User=root -q $@
+log() {
+   #echo "$@" | logger -t "cdist-schroot-exec"
+   :
+}
+
+chroot_name="$1"; shift
+target_host="$1"; shift
+
+code="ssh -o User=root -q $target_host schroot -c $chroot_name -- $@"
+
+log "target_host: $target_host"
+log "chroot_name: $chroot_name"
+log "@: $@"
+log "code: $code"
+
+# run in remote chroot
+$code
+
+log "-----"
