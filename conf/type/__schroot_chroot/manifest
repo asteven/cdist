@@ -24,9 +24,10 @@ if [ -f "$__object/parameter/name" ]; then
 else
    name="$__object_id"
 fi
-directory="$(cat "$__object/parameter/directory")"
 if [ -f "$__object/parameter/arch" ]; then
    arch="$(cat "$__object/parameter/arch")"
+else
+   arch="$(cat "$__global/explorer/machine")"
 fi
 if [ -f "$__object/parameter/description" ]; then
    description="$(cat "$__object/parameter/description")"
@@ -35,12 +36,13 @@ if [ -f "$__object/parameter/script_config" ]; then
    script_config="$(cat "$__object/parameter/script_config")"
 fi
 
-# staticly defined for now
+# only support directory type chroots for now
 type="directory"
+directory="$(cat "$__object/parameter/directory")"
 
 # generate config file from template
+[ -d "$__object/files" ] || mkdir "$__object/files"
 . "$__type/files/schroot.conf.template" > "$__object/files/chroot.conf"
 __file "/etc/schroot/chroot.d/${name}" \
    --source "$__object/files/chroot.conf" \
    --owner root --group root --mode 644
-
