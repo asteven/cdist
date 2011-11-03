@@ -24,11 +24,14 @@ OPTIONAL PARAMETERS
 name::
    Name for use in schroot's config file.
    Defaults to object_id.
+
 arch::
    Architecture of the system in the chroot.
    Defaults to the host systems architecture.
+
 description::
    Guess what.
+
 script_config::
    Name of the script-config file, relative to /etc/schroot. See schroot.conf(5) and schroot-script-config(5)
 
