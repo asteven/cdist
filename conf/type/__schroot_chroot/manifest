@@ -31,10 +31,12 @@ fi
 if [ -f "$__object/parameter/description" ]; then
    description="$(cat "$__object/parameter/description")"
 fi
+if [ -f "$__object/parameter/script_config" ]; then
+   script_config="$(cat "$__object/parameter/script_config")"
+fi
+
 # staticly defined for now
 type="directory"
-
-# TODO: script_config if needed
 
 # generate config file from template
 . "$__type/files/schroot.conf.template" > "$__object/files/chroot.conf"

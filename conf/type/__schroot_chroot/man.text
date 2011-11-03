@@ -29,6 +29,8 @@ arch::
    Defaults to the host systems architecture.
 description::
    Guess what.
+script-config::
+   Path to a script-config file. See schroot.conf(5) and schroot-script-config(5)
 
 
 EXAMPLES
@@ -44,13 +46,16 @@ __schroot_chroot lucid-amd64 \
 
 __schroot_chroot some-id \
    --name explicit-name \
-   --directory /local/chroot/whatever
+   --directory /local/chroot/whatever \
+   --script_config /etc/schroot/my-fancy-script-config
 --------------------------------------------------------------------------------
 
 
 SEE ALSO
 --------
 - cdist-type(7)
+- schroot.conf(5)
+- schroot-script-config(5)
 
 
 COPYING
