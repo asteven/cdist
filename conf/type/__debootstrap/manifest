@@ -19,13 +19,11 @@
 #
 
 # set defaults
-if [ ! -f "$__object/parameter/target" ]; then
-   target="/$__object_id"
-   echo "$target" > "$__object/parameter/target"
-fi
-if [ ! -f "$__object/parameter/suite" ]; then
-   cat "$__global/explorer/lsb_codename" > "$__object/parameter/suite"
-fi
-if [ ! -f "$__object/parameter/state" ]; then
-   echo "present" > "$__object/parameter/state"
-fi
+target="$(cat "$__object/parameter/target" 2>/dev/null \
+   || echo "/$__object_id" | tee "$__object/parameter/target")"
+
+suite="$(cat "$__object/parameter/suite" 2>/dev/null \
+   || cat "$__global/explorer/lsb_codename" | tee "$__object/parameter/suite")"
+
+state="$(cat "$__object/parameter/state" 2>/dev/null \
+   || echo "present" | tee "$__object/parameter/state")"
