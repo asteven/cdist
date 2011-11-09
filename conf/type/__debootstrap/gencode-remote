@@ -28,22 +28,23 @@ output_if_debug() {
 }
 DONE
 
+# required
 target="$(cat "$__object/parameter/target")"
 suite="$(cat "$__object/parameter/suite")"
-if [ -f "$__object/parameter/arch" ]; then
-   arch="$(cat "$__object/parameter/arch")"
-fi
-if [ -f "$__object/parameter/mirror" ]; then
-   mirror="$(cat "$__object/parameter/mirror")"
-fi
-if [ -f "$__object/parameter/script" ]; then
-   script="$(cat "$__object/parameter/script")"
-fi
+
+# optional
+arch="$(cat "$__object/parameter/arch" 2>/dev/null || true)"
+mirror="$(cat "$__object/parameter/mirror" 2>/dev/null || true)"
+script="$(cat "$__object/parameter/script" 2>/dev/null || true)"
 
 state="$(cat "$__object/explorer/state")"
 if [ "$state" = "absent" ]; then
    printf "debootstrap"
-   [ -n "$arch" ] && printf " --arch $arch"
+   case "$arch" in
+      x86_64) printf " --arch=amd64" ;;
+      '') : ;;
+      *) printf " --arch=$arch"
+   esac
    printf " $suite $target"
    [ -n "$mirror" ] && printf " $mirror"
    [ -n "$script" ] && printf " $script"
