@@ -55,6 +55,8 @@ awk -v prefix="$prefix" -v suffix="$suffix" '
    }
 }' /etc/exports > /etc/exports+
 mv -f /etc/exports+ /etc/exports
+# FIXME: does this belong here?
+exportfs -rf
 DONE
          ;;
       esac
