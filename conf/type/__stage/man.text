@@ -11,7 +11,7 @@ cdist-type__stage - download and unpack a stage file
 DESCRIPTION
 -----------
 Downloads a operating system stage using curl and unpacks it to /target
-using tar.
+using tar. The stage tarball is expected to be gzip compressed.
 
 
 REQUIRED PARAMETERS
