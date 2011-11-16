@@ -28,8 +28,28 @@ DONE
 
 uri="$(cat "$__object/parameter/uri")"
 target="$(cat "$__object/parameter/target")"
+post_install="$(cat "$__object/parameter/post_install" 2>/dev/null || true)"
+
 
 [ "$__debug" = "yes" ] && curl="curl" || curl="curl -s"
 [ "$__debug" = "yes" ] && tar="tar -xvzp" || tar="tar -xzp"
 
 echo "$curl '$uri' | $tar -C '$target' | output_if_debug"
+if [ -n "$post_install" ]; then
+   post_install_script="$(cat "$__object/parameter/post_install_script")"
+   cat << DONE
+[ -d "${target}/proc" ] || mkdir "${target}/proc"
+mount -t proc none "${target}/proc"
+[ -d "${target}/sys" ] || mkdir "${target}/sys"
+mount -t sysfs none "${target}/sys"
+[ -d "${target}/dev" ] || mkdir "${target}/dev"
+mount --rbind /dev "${target}/dev"
+[ -d "${target}/tmp" ] || mkdir "${target}/tmp"
+mount -t tmpfs none "${target}/tmp"
+cp "$post_install_script" "${target}/tmp/post_install"
+chmod +x "${target}/tmp/post_install"
+cp /etc/resolv.conf "${target}/etc/"
+chroot "$target" /tmp/post_install
+umount -l "${target}/tmp" "${target}/dev" "${target}/sys" "${target}/proc"
+DONE
+fi

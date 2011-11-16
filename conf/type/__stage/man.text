@@ -29,6 +29,10 @@ OPTIONAL PARAMETERS
 target::
    where to unpack the tarball to. Defaults to /target.
 
+post_install::
+   path to an optional local script. The script is uploaded to the target and 
+   executed inside (chroot) the target after the stage has been unpacked.
+
 
 EXAMPLES
 --------
@@ -37,6 +41,9 @@ EXAMPLES
 __stage some-id --uri tftp:///path/to/stage.tgz
 __stage some-id --uri http://path/to/stage.tgz --target /mnt/foobar
 __stage some-id --uri file:///path/to/stage.tgz --target /target
+__stage some-id --uri file:///path/to/stage.tgz \
+   --target /target \
+   --post_install /path/to/file/on/server
 --------------------------------------------------------------------------------
 
 

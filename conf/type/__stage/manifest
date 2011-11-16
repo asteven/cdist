@@ -23,3 +23,11 @@ uri="$(cat "$__object/parameter/uri" 2>/dev/null \
    || echo "$__object_id" | tee "$__object/parameter/uri")"
 target="$(cat "$__object/parameter/target" 2>/dev/null \
    || echo "/target" | tee "$__object/parameter/target")"
+
+if [ -f "$__object/parameter/post_install" ]; then
+   post_install="$(cat "$__object/parameter/post_install")"
+   post_install_script="/tmp/post_install"
+   __install_file $post_install_script --source $post_install
+   echo "$post_install_script" > "$__object/parameter/post_install_script"
+fi
+
