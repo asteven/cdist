@@ -9,6 +9,8 @@ debug() {
 output_if_debug() {
    if [ "$__debug" = "yes" ]; then
       cat
+   else
+      cat > /dev/null
    fi
 }
 
@@ -28,6 +30,13 @@ create_disklabel() {
 
    debug create_disklabel "creating new msdos disklabel"
    fdisk_command ${device} "o"
+   return $?
+}
+
+toggle_bootable() {
+   local device="$1"
+   local minor="$2"
+   fdisk_command ${device} "a\n${minor}\n"
    return $?
 }
 

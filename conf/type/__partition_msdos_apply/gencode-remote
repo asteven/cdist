@@ -150,5 +150,9 @@ for object in $objects; do
 
    echo "create_partition '$device' '$minor' '$partition_size' '$type' '$primary_count' \
       || die 'Failed to create partition: $partition'"
+
+   if [ "$bootable" = "true" ]; then
+      echo "toggle_bootable '$device' '$minor' || die 'Failed to toogle bootable flag for partition: $partition'"
+   fi
 done
 
