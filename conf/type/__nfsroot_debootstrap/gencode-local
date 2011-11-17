@@ -23,7 +23,7 @@ target_uri="schroot://$__target_host/$name"
 remote="$__type/files/remote-schroot-uri"
 
 cat << DONE
-echo export __remote_exec="$remote exec"
-echo export __remote_copy="$remote copy"
-echo cdist config $target_uri
+export __remote_exec="$remote exec"
+export __remote_copy="$remote copy"
+cdist config $target_uri
 DONE
