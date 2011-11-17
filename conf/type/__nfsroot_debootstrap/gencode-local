@@ -25,5 +25,5 @@ remote="$__type/files/remote-schroot-uri"
 cat << DONE
 export __remote_exec="$remote exec"
 export __remote_copy="$remote copy"
-cdist config $target_uri
+cdist -v config $target_uri
 DONE
