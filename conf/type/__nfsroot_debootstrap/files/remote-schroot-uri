@@ -49,7 +49,7 @@ my_name="${0##*/}"
 mode="$1"; shift
 
 log() {
-   #echo "$@" | logger -t "cdist-$my_name-$mode"
+   echo "$@" | logger -t "cdist-$my_name-$mode"
    :
 }
 
