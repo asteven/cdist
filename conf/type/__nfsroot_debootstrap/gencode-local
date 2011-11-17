@@ -23,7 +23,7 @@ target_uri="schroot://$__target_host/$name"
 remote="$__type/files/remote-schroot-uri"
 
 cdist_args="-v"
-[ "$__cdist_debug" ] && cdist_args="$cdist_args -d"
+[ "$__debug" = "yes" ] && cdist_args="$cdist_args -d"
 
 cat << DONE
 export __remote_exec="$remote exec"
