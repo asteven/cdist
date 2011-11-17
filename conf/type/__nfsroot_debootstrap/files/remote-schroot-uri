@@ -114,7 +114,7 @@ case "$mode" in
    exec)
       # In exec mode the first argument is the __target_host which we already got from env. Get rid of it.
       shift
-      code="$exec_prefix schroot -c $schroot_name -- $@"
+      code="$exec_prefix schroot -c $schroot_name -- sh -c '$@'"
    ;;
    copy)
       # get directory for given chroot_name
