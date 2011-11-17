@@ -19,5 +19,5 @@
 #
 
 __file /usr/sbin/policy-rc.d \
-   --owner root --group root -mode 755 \
+   --owner root --group root --mode 755 \
    --source "$__type/files/policy-rc.d"
