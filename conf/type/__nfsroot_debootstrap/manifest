@@ -57,8 +57,8 @@ require="__schroot __file/etc/schroot/$fstab __file/etc/schroot/$copyfiles __fil
 __package debootstrap --state installed
 
 # build parameters for __debootstrap
-set -- "$@" "$target"
+set -- "$@"
 [ -n "$suite" ] && set -- "$@" "--suite" "$suite"
 [ -n "$mirror" ] && set -- "$@" "--mirror" "$mirror"
 [ -n "$arch" ] && set -- "$@" "--arch" "$arch"
-required="__package/debootstrap" __debootstrap "$@"
+required="__package/debootstrap" __debootstrap "$target" "$@"
