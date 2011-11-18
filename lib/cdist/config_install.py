@@ -71,7 +71,8 @@ class ConfigInstall(object):
                     raise cdist.Error('Circular reference detected: %s -> %s' % (cdist_object.name, required_object.name))
                 self._resolve_object_dependencies(required_object, resolved, unresolved)
 
-        resolved.append(cdist_object)
+        if not cdist_object in resolved:
+            resolved.append(cdist_object)
         unresolved.remove(cdist_object)
 
     def _resolve_dependencies(self, objects):
