@@ -28,6 +28,7 @@ import sys
 import tempfile
 import time
 import itertools
+import pprint
 
 import cdist
 from cdist import core
@@ -142,7 +143,6 @@ class ConfigInstall(object):
             self.local.type_path)
 
         dependency_resolver = resolver.DependencyResolver(objects)
-        from pprint import pprint
         self.log.debug(pprint.pformat(dependency_resolver.graph))
 
         for cdist_object in dependency_resolver:
