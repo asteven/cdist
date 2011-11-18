@@ -71,8 +71,7 @@ class ConfigInstall(object):
                     raise cdist.Error('Circular reference detected: %s -> %s' % (cdist_object.name, required_object.name))
                 self._resolve_object_dependencies(required_object, resolved, unresolved)
 
-        if not cdist_object in resolved:
-            resolved.append(cdist_object)
+        resolved.append(cdist_object)
         unresolved.remove(cdist_object)
 
     def _resolve_dependencies(self, objects):
@@ -149,7 +148,7 @@ class ConfigInstall(object):
         self.log.debug("Trying to run object " + cdist_object.name)
         if cdist_object.state == core.Object.STATE_DONE:
             self.log.debug("Ignoring run of already finished object %s", cdist_object)
-            print("############################################################## SHOULD NEVER HAPPEN")
+            # SHOULD NEVER HAPPEN
             return
 
         cdist_type = cdist_object.type
