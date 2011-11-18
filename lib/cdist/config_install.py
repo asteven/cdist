@@ -80,7 +80,7 @@ class ConfigInstall(object):
             resolved = []
             unresolved = []
             self._resolve_object_dependencies(o, resolved, unresolved)
-            print("resolved: %s" % [str(r) for r in resolved])
+            #print("resolved: %s" % [str(r) for r in resolved])
             dependencies.append(resolved)
         return dependencies
 
