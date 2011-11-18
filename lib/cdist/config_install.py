@@ -66,10 +66,10 @@ class ConfigInstall(object):
             if not required_object.exists:
                 raise cdist.Error(cdist_object.name + " requires non-existing " + required_object.name)
 
-            if requirement not in resolved:
-                if requirement in unresolved:
-                    raise cdist.Error('Circular reference detected: %s -> %s' % (cdist_object.name, requirement.name))
-                self._resolve_object_dependencies(requirement, resolved, unresolved)
+            if required_object not in resolved:
+                if required_object in unresolved:
+                    raise cdist.Error('Circular reference detected: %s -> %s' % (cdist_object.name, required_object.name))
+                self._resolve_object_dependencies(required_object, resolved, unresolved)
 
         resolved.append(cdist_object)
         unresolved.remove(cdist_object)
