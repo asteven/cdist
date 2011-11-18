@@ -116,8 +116,12 @@ class Object(object):
         return '<Object %s>' % self.name
 
     def __eq__(self, other):
-        """define equality as 'attributes are the same'"""
-        return self.__dict__ == other.__dict__
+        """define equality as 'name is the same'"""
+        return self.name == other.name
+    
+    def __hash__(self):
+        return hash(self.name)
+
 
     def __lt__(self, other):
         return isinstance(other, self.__class__) and self.name < other.name
