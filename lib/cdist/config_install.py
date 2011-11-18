@@ -31,6 +31,7 @@ import itertools
 
 import cdist
 from cdist import core
+from cdist import resolver
 
 
 
@@ -54,45 +55,6 @@ class ConfigInstall(object):
         self.explorer = core.Explorer(self.context.target_host, self.local, self.remote)
         self.manifest = core.Manifest(self.context.target_host, self.local)
         self.code = core.Code(self.context.target_host, self.local, self.remote)
-
-    def _resolve_object_dependencies(self, cdist_object, resolved, unresolved):
-        self.log.debug('Resolving dependencies for: %s' % cdist_object.name)
-        unresolved.append(cdist_object)
-        for requirement in cdist_object.requirements:
-            self.log.debug("Object %s requires %s", cdist_object, requirement)
-            required_object = cdist_object.object_from_name(requirement)
-
-            # The user may have created dependencies without satisfying them
-            if not required_object.exists:
-                raise cdist.Error(cdist_object.name + " requires non-existing " + required_object.name)
-
-            if required_object not in resolved:
-                if required_object in unresolved:
-                    raise cdist.Error('Circular reference detected: %s -> %s' % (cdist_object.name, required_object.name))
-                self._resolve_object_dependencies(required_object, resolved, unresolved)
-
-        resolved.append(cdist_object)
-        unresolved.remove(cdist_object)
-
-    def _resolve_dependencies(self, objects):
-        dependencies = []
-        for o in objects:
-            resolved = []
-            unresolved = []
-            self._resolve_object_dependencies(o, resolved, unresolved)
-            #print("resolved: %s" % [str(r) for r in resolved])
-            dependencies.append(resolved)
-        return dependencies
-
-    def _filter_duplicates(self, dependencies):
-        # Flatten list of lists
-        iterable = itertools.chain(*dependencies)
-        # Filter out duplicates
-        seen = set()
-        seen_add = seen.add
-        for element in itertools.filterfalse(seen.__contains__, iterable):
-            seen_add(element)
-            yield element
 
     def cleanup(self):
         # FIXME: move to local?
@@ -179,12 +141,10 @@ class ConfigInstall(object):
             self.local.object_path,
             self.local.type_path)
 
-        dependencies = self._resolve_dependencies(objects)
+        dependency_resolver = resolver.DependencyResolver(objects)
+        from pprint import pprint
+        self.log.debug(pprint.pformat(dependency_resolver.graph))
 
-        # sort by length, so that longer dependency chains are processed in order
-        # -> looks nicer when processing
-        dependencies.sort(key=lambda item: len(item), reverse=True)
-
-        for cdist_object in self._filter_duplicates(dependencies):
+        for cdist_object in dependency_resolver:
             self.log.debug("Run object: %s", cdist_object)
             self.object_run(cdist_object)
