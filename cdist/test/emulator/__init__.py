@@ -34,6 +34,7 @@ from cdist.exec import local
 from cdist import emulator
 from cdist import core
 from cdist import config
+from cdist import dependency
 
 import os.path as op
 my_dir = op.abspath(op.dirname(__file__))
@@ -71,20 +72,18 @@ class EmulatorTestCase(test.CdistTestCase):
         self.assertRaises(core.cdist_type.NoSuchTypeError, emulator.Emulator, argv, env=self.env)
 
     def test_nonexistent_type_requirement(self):
-        argv = ['__file', '/tmp/foobar']
-        self.env['require'] = '__does-not-exist/some-id'
+        argv = ['__file', '/tmp/foobar', '--after', '__does-not-exist/some-id']
         emu = emulator.Emulator(argv, env=self.env)
         self.assertRaises(core.cdist_type.NoSuchTypeError, emu.run)
 
     def test_illegal_object_id_requirement(self):
-        argv = ['__file', '/tmp/foobar']
+        argv = ['__file', '/tmp/foobar', '--after', '__file/bad/id/with/.cdist/inside']
         self.env['require'] = "__file/bad/id/with/%s/inside" % self.local.object_marker_name
         emu = emulator.Emulator(argv, env=self.env)
         self.assertRaises(core.IllegalObjectIdError, emu.run)
 
     def test_missing_object_id_requirement(self):
-        argv = ['__file', '/tmp/foobar']
-        self.env['require'] = '__file'
+        argv = ['__file', '/tmp/foobar', '--after', '__file']
         emu = emulator.Emulator(argv, env=self.env)
         self.assertRaises(core.cdist_object.MissingObjectIdError, emu.run)
 
@@ -96,15 +95,13 @@ class EmulatorTestCase(test.CdistTestCase):
         # If reached here, everything is fine
 
     def test_singleton_object_requirement(self):
-        argv = ['__file', '/tmp/foobar']
-        self.env['require'] = '__issue'
+        argv = ['__file', '/tmp/foobar', '--after', '__issue']
         emu = emulator.Emulator(argv, env=self.env)
         emu.run()
         # if we get here all is fine
 
     def test_requirement_pattern(self):
-        argv = ['__file', '/tmp/foobar']
-        self.env['require'] = '__file/etc/*'
+        argv = ['__file', '/tmp/foobar', '--after', '__file/etc/*']
         emu = emulator.Emulator(argv, env=self.env)
         # if we get here all is fine
 
@@ -147,6 +144,7 @@ class AutoRequireEmulatorTestCase(test.CdistTestCase):
             add_conf_dirs=[conf_dir])
         self.local.create_files_dirs()
         self.manifest = core.Manifest(self.target_host, self.local)
+        self.dpm = dependency.DependencyManager(os.path.join(out_path, 'dependency'))
 
     def tearDown(self):
         shutil.rmtree(self.temp_dir)
@@ -158,7 +156,8 @@ class AutoRequireEmulatorTestCase(test.CdistTestCase):
         cdist_object = core.CdistObject(cdist_type, self.local.object_path, self.local.object_marker_name, '')
         self.manifest.run_type_manifest(cdist_object)
         expected = ['__planet/Saturn', '__moon/Prometheus']
-        self.assertEqual(sorted(cdist_object.autorequire), sorted(expected))
+        deps = self.dpm(cdist_object.name)
+        self.assertEqual(sorted(deps['auto']), sorted(expected))
 
 class OverrideTestCase(test.CdistTestCase):
 
