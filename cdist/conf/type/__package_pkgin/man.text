@@ -1,0 +1,47 @@
+cdist-type__package_pkgin(7)
+============================
+Steven Armstrong <steven-cdist--@--armstrong.cc>
+
+
+NAME
+----
+cdist-type__package_pkgin - Manage packages with pkgin
+
+
+DESCRIPTION
+-----------
+pkgin is usually used on SmartOS to manage packages.
+
+
+REQUIRED PARAMETERS
+-------------------
+None
+
+
+OPTIONAL PARAMETERS
+-------------------
+name::
+   If supplied, use the name and not the object id as the package name.
+
+state::
+    Either "present" or "absent", defaults to "present"
+
+
+EXAMPLES
+--------
+
+--------------------------------------------------------------------------------
+# Ensure zsh is installed
+__package_pkgin zsh
+--------------------------------------------------------------------------------
+
+
+SEE ALSO
+--------
+- cdist-type(7)
+
+
+COPYING
+-------
+Copyright \(C) 2015 Steven Armstrong. Free use of this software is
+granted under the terms of the GNU General Public License version 3 (GPLv3).
