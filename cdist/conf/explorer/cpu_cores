@@ -2,6 +2,7 @@
 #
 # 2014 Daniel Heule  (hda at sfs.biz)
 # 2014 Thomas Oettli (otho at sfs.biz)
+# 2015 Steven Armstrong (steven-cdist at armstrong.cc)
 #
 # This file is part of cdist.
 #
@@ -26,6 +27,9 @@ os=$("$__explorer/os")
 case "$os" in
     "macosx")
         echo "$(sysctl -n hw.physicalcpu)"
+    ;;
+    smartos)
+        sysinfo | json "CPU Total Cores"
     ;;
 
     *)
