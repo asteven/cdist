@@ -63,4 +63,7 @@ case "$($__explorer/os)" in
    ubuntu)
       lsb_release -sr
    ;;
+   smartos)
+      head -n 1 /etc/release | sed 's/^[ \t]*//'
+   ;;
 esac

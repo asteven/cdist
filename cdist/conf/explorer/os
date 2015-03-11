@@ -114,6 +114,12 @@ case "$uname_s" in
       exit 0
    ;;
    SunOS)
+      if [ -f /etc/release ]; then
+         if grep -q -w SmartOS /etc/release; then
+            echo smartos
+            exit 0
+         fi
+      fi
       echo solaris
       exit 0
    ;;
