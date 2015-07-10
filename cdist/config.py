@@ -269,7 +269,7 @@ class Config(object):
         type_path = self.local.type_path
         type_name, object_id = core.CdistObject.split_name(object_name)
         cdist_type = core.CdistType(type_path, type_name)
-        return core.CdistObject(cdist_type, base_path, object_id=object_id)
+        return core.CdistObject(cdist_type, base_path, self.local.object_marker_name, object_id=object_id)
 
     def list_unfinished_objects(self, object_list=None):
         """Return a list of objects that are not yet finished."""
