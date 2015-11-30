@@ -37,7 +37,7 @@ log = logging.getLogger(__name__)
 DEFAULT_MANIFEST = """
 for pkg in \
     file \
-    linux-image-amd64 \
+    linux-generic \
     openssh-server curl \
     syslinux grub2 \
     gdisk util-linux lvm2 mdadm \
@@ -63,7 +63,8 @@ eof
 # fix the bloody 'stdin: is not a tty' problem
 __line /root/.profile --line 'mesg n' --state absent
 
-__hostname preos
+# Do not set hostname, it overwrites the host systems name!
+#__hostname --name preos
 """
 
 class PreOSExistsError(cdist.Error):
@@ -85,10 +86,11 @@ class PreOS(object):
         self.arch = arch
 
         self.command = "debootstrap"
-        self.suite  = "wheezy"
+        self.suite  = "trusty"
         self.options = [
             "--variant=minbase",
             "--include=openssh-server",
+            "--include=lsb-release",
             "--arch=%s" % self.arch
             ]
         self.mirror = mirror
