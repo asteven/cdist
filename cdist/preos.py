@@ -42,7 +42,7 @@ for pkg in \
     file \
     linux-generic \
     openssh-server curl \
-    syslinux-common grub-pc \
+    pxelinux grub-pc \
     gdisk util-linux lvm2 mdadm \
     btrfs-tools e2fsprogs jfsutils reiser4progs xfsprogs; do
     __package $pkg --state present
@@ -105,7 +105,7 @@ class PreOS(object):
             ]
         self.mirror = mirror
 
-        self.pxelinux = "/usr/lib/syslinux/pxelinux.0"
+        self.pxelinux = "/usr/lib/PXELINUX/pxelinux.0"
         self.pxelinux_cfg = """
 DEFAULT preos
 LABEL preos
