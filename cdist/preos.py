@@ -196,7 +196,7 @@ cp -L "$src" "$real_dst"
 
     def create_pxelinux(self):
         dst = os.path.join(self.out_dir, "pxelinux.0")
-        src = "%s/usr/lib/syslinux/pxelinux.0" % self.target_dir
+        src = os.path.join(self.target_dir, self.pxelinux.lstrip('/'))
 
         log.info("Creating pxelinux.0  ...")
         shutil.copyfile(src, dst, follow_symlinks=True)
