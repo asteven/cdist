@@ -39,7 +39,7 @@ for pkg in \
     file \
     linux-generic \
     openssh-server curl \
-    syslinux grub2 \
+    syslinux grub-pc \
     gdisk util-linux lvm2 mdadm \
     btrfs-tools e2fsprogs jfsutils reiser4progs xfsprogs; do
     __package $pkg --state present
@@ -48,7 +48,14 @@ done
 # initramfs requires /init
 __link /init --source /sbin/init --type symbolic
 
-__file /etc/network/interfaces --source - --mode 0644 << eof
+__directory /etc/network \
+   --state present \
+   --owner root \
+   --group root \
+   --mode 755
+
+require="__directory/etc/network" \
+    __file /etc/network/interfaces --source - --mode 0644 << eof
 # The loopback network interface
 auto lo
 iface lo inet loopback
@@ -86,7 +93,7 @@ class PreOS(object):
         self.arch = arch
 
         self.command = "debootstrap"
-        self.suite  = "trusty"
+        self.suite  = "wily"
         self.options = [
             "--variant=minbase",
             "--include=openssh-server",
@@ -112,7 +119,8 @@ INITRD initramfs
 chroot="$1"; shift
 
 script=$(mktemp "${chroot}/tmp/chroot-${0##*/}.XXXXXXXXXX")
-trap cleanup INT TERM EXIT
+#trap cleanup INT TERM EXIT
+trap cleanup EXIT
 cleanup() {
    [ $__cdist_debug ] || rm "$script"
 }
@@ -202,7 +210,7 @@ cp -L "$src" "$real_dst"
 
     def create_initramfs(self):
         out_file = os.path.join(self.out_dir, "initramfs")
-        cmd="cd {target_dir}; find . -print0 | cpio --null -o --format=newc | gzip -9 > {out_file}".format(target_dir = self.target_dir, out_file = out_file)
+        cmd="cd {target_dir}; find . -xdev -print0 | cpio --null -o --format=newc | gzip -9 > {out_file}".format(target_dir = self.target_dir, out_file = out_file)
 
         log.info("Creating initramfs ...")
         subprocess.check_call(cmd, shell=True)
