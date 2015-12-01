@@ -35,11 +35,14 @@ import cdist.exec.remote
 log = logging.getLogger(__name__)
 
 DEFAULT_MANIFEST = """
+__apt_norecommends
+export require="__apt_norecommends"
+
 for pkg in \
     file \
     linux-generic \
     openssh-server curl \
-    syslinux grub-pc \
+    syslinux-common grub-pc \
     gdisk util-linux lvm2 mdadm \
     btrfs-tools e2fsprogs jfsutils reiser4progs xfsprogs; do
     __package $pkg --state present
