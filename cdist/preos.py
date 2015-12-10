@@ -42,6 +42,7 @@ for pkg in \
     file \
     linux-generic \
     openssh-server curl \
+    ifupdown \
     pxelinux grub-pc \
     gdisk util-linux lvm2 mdadm \
     btrfs-tools e2fsprogs jfsutils reiser4progs xfsprogs; do
