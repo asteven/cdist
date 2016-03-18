@@ -97,11 +97,10 @@ class PreOS(object):
         self.arch = arch
 
         self.command = "debootstrap"
-        self.suite  = "wily"
+        self.suite  = "xenial"
         self.options = [
             "--variant=minbase",
-            "--include=openssh-server",
-            "--include=lsb-release",
+            "--include=openssh-server,python3,lsb-release",
             "--arch=%s" % self.arch
             ]
         self.mirror = mirror
