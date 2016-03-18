@@ -43,7 +43,7 @@ for pkg in \
     linux-generic \
     openssh-server curl \
     ifupdown \
-    pxelinux grub-pc \
+    syslinux-common pxelinux grub-pc \
     gdisk util-linux lvm2 mdadm \
     btrfs-tools e2fsprogs jfsutils reiser4progs xfsprogs; do
     __package $pkg --state present
@@ -100,7 +100,7 @@ class PreOS(object):
         self.suite  = "xenial"
         self.options = [
             "--variant=minbase",
-            "--include=openssh-server,python3,lsb-release",
+            "--include=coreutils,openssh-server,python3,lsb-release",
             "--arch=%s" % self.arch
             ]
         self.mirror = mirror
@@ -173,11 +173,16 @@ cp -L "$src" "$real_dst"
             raise cdist.Error("Debootstrap failed (root priviliges required)")
 
         # Required to run this - otherwise apt-get install fails
-        cmd = [ "chroot", self.target_dir, "/usr/bin/apt-get", "update" ]
+        env={'PATH': '/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'}
+        commands = [
+            [ "chroot", self.target_dir, "/usr/bin/apt-get", "update" ],
+            [ "chroot", self.target_dir, "/usr/bin/apt-key", "update" ],
+        ]
         try:
-            subprocess.check_call(cmd)
+            for cmd in commands:
+                subprocess.check_call(cmd, env=env)
         except subprocess.CalledProcessError:
-            raise cdist.Error("chrooted apt-get update failed (root priviliges required)")
+            raise cdist.Error("chrooted command failed: %s", cmd)
 
     def create_helper_files(self, base_dir):
         for key, val in self.helper.items():
