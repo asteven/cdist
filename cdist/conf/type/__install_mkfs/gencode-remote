@@ -23,7 +23,7 @@ type="$(cat "$__object/parameter/type")"
 
 case "$type" in
    swap)
-      echo "mkswap $device"
+      echo "mkswap -f $device"
    ;;
    xfs)
       command="mkfs.xfs -f -q"
