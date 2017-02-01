@@ -23,10 +23,26 @@ type="$(cat "$__object/parameter/type")"
 
 case "$type" in
    swap)
-      echo "mkswap $device"
+      echo "mkswap -f $device"
    ;;
    xfs)
       command="mkfs.xfs -f -q"
+      if [ -f "$__object/parameter/options" ]; then
+         options="$(cat "$__object/parameter/options")"
+         command="$command $options"
+      fi
+      command="$command $device"
+      if [ -f "$__object/parameter/blocks" ]; then
+         blocks="$(cat "$__object/parameter/blocks")"
+         command="$command $blocks"
+      fi
+      echo "$command"
+   ;;
+   vfat)
+      command="mkfs.vfat"
+      if [ -n "$fat_size" ]; then
+         command="$command -F $fat_size"
+      fi
       if [ -f "$__object/parameter/options" ]; then
          options="$(cat "$__object/parameter/options")"
          command="$command $options"
