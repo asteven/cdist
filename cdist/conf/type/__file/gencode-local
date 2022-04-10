@@ -1,7 +1,7 @@
 #!/bin/sh -e
 #
 # 2011-2012 Nico Schottelius (nico-cdist at schottelius.org)
-# 2013 Steven Armstrong (steven-cdist armstrong.cc)
+# 2013-2022 Steven Armstrong (steven-cdist armstrong.cc)
 #
 # This file is part of cdist.
 #
@@ -88,11 +88,24 @@ if [ "$state_should" = "present" ] || [ "$state_should" = "exists" ]; then
       mkdir "$__object/files"
       touch "$__object/files/set-attributes"
 
-      # upload file to temp location
-      tempfile_template="${destination}.cdist.XXXXXXXXXX"
+      # Upload file to a temporary directory.
+      # We create our own directory for uploading so we can safely control
+      # write access which would not be possible with just a file.
+      upload_directory="$(mktemp -u "${destination}.cdist.XXXXXXXXXX")"
       cat << DONE
-destination_upload="\$($__remote_exec $__target_host "mktemp $tempfile_template")"
+$__remote_exec $__target_host "umask 777; test -e $upload_directory && exit 1 || mkdir $upload_directory" || {
+   echo "Refusing to upload file to existing destination: $upload_directory" >&2
+   exit 1
+}
 DONE
+      # Tell gencode-remote to where we uploaded the file so it can move
+      # it to its final destination.
+      echo "$upload_directory" > "$__object/files/upload-directory"
+      # We use a random filename for uploading to prevent someone from
+      # tampering with our otherwise predictable filename.
+      upload_filename="$(mktemp -u "XXXXXXXXXX")"
+      echo "$upload_filename" > "$__object/files/upload-filename"
+
       if [ "$upload_file" ]; then
          echo upload >> "$__messages_out"
          # IPv6 fix
@@ -103,12 +116,8 @@ DONE
              my_target_host="${__target_host}"
          fi
          cat << DONE
-$__remote_copy "$source" "${my_target_host}:\$destination_upload"
+$__remote_copy "$source" "$my_target_host:$upload_directory/$upload_filename"
 DONE
       fi
-# move uploaded file into place
-cat << DONE
-$__remote_exec $__target_host "rm -rf \"$destination\"; mv \"\$destination_upload\" \"$destination\""
-DONE
    fi
 fi
