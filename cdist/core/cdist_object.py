@@ -289,16 +289,31 @@ class CdistObject:
 
             if not cdist_object.state == self.STATE_DONE:
                 object_list.append(cdist_object)
+            # A required object can only be considered done
+            # when all it's children are also done.
+            for child in cdist_object.children:
+                child_object = self.object_from_name(child)
+                if child_object != self and \
+                    child_object.state != self.STATE_DONE:
+                    object_list.append(child_object)
 
         return object_list
 
     def has_requirements_unfinished(self, requirements):
         """Return whether requirements are satisfied"""
 
+        unfinished = False
         for requirement in requirements:
             cdist_object = self.object_from_name(requirement)
 
             if cdist_object.state != self.STATE_DONE:
-                return True
+                unfinished = True
+            # A required object can only be considered done
+            # when all it's children are also done.
+            for child in cdist_object.children:
+                child_object = self.object_from_name(child)
+                if child_object != self and \
+                    child_object.state != self.STATE_DONE:
+                    unfinished = True
 
-        return False
+        return unfinished
