@@ -284,7 +284,10 @@ class CdistObject:
 
         object_list = []
 
+        import sys
         for requirement in requirements:
+            if requirement in self.parents:
+                continue
             cdist_object = self.object_from_name(requirement)
 
             if not cdist_object.state == self.STATE_DONE:
@@ -304,6 +307,8 @@ class CdistObject:
 
         unfinished = False
         for requirement in requirements:
+            if requirement in self.parents:
+                continue
             cdist_object = self.object_from_name(requirement)
 
             if cdist_object.state != self.STATE_DONE:
